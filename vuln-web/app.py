@@ -1,4 +1,4 @@
-from quart import Quart, render_template, request
+from quart import Quart, redirect, render_template, request
 
 from defination import CSP_POLICICY
 from middleware.filter import FilterMiddleware
@@ -10,6 +10,11 @@ app = Quart(__name__)
 
 app.asgi_app = FilterMiddleware(app.asgi_app)
 app.asgi_app = HTTPSecurityHeaderMiddleware(app.asgi_app,CSP_POLICICY)
+
+
+@app.route('/',methods=['GET'])
+async def home():
+    return redirect('/feedback')
 
 
 @app.route('/thank_you',methods=['GET'])
