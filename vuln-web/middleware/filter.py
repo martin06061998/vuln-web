@@ -1,6 +1,6 @@
 import re
 from urllib.parse import unquote_plus
-from defination import SQLI_PATTERN,XSS_PATTERNS
+from defination import SQLI_PATTERN,XSS_PATTERNS,FILE_DISCLOSURE_PATTERNS
 
 
 class FilterMiddleware:
@@ -10,6 +10,7 @@ class FilterMiddleware:
         self.block_strategy = dict()
         self.block_strategy['sqli'] = {'malicious_checking_pattern':r'(\(|\)|select|<|>|=|\')','BLOCKED_PATTERNS':SQLI_PATTERN}
         self.block_strategy['xss'] = {'malicious_checking_pattern':r'(<|>|"|=)','BLOCKED_PATTERNS':XSS_PATTERNS}
+        self.block_strategy['file-disclosure'] = {'malicious_checking_pattern':r'(\.\.|/|\\)','BLOCKED_PATTERNS':FILE_DISCLOSURE_PATTERNS}
         self.app = app
     
     

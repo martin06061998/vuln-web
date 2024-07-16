@@ -38,3 +38,5 @@ SQLI_PATTERN = [
         r'inet_server_(port|addr)\(.*\)',
         r'(create|drop|truncate).*(table|database)'
 ]
+
+FILE_DISCLOSURE_PATTERNS = [r'\.\.(/|\\)',r'/app/[.a-z0-9/]*\.(py)',r'/etc/(shadow|passwd|services|init\.d)',r'/var/log',r'/\.ssh/']
