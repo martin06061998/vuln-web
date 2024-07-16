@@ -21,7 +21,7 @@ with open(file_path, 'r') as file:
 
 XSS_PATTERNS = [line.strip() for line in lines]
 
-BLOCKED_PATTERN = [
+SQLI_PATTERN = [
         DATABASE_KEYWORD,
         r'substr(ing)?\(.*\)',
         r'(current|session|pg)_user',
@@ -32,13 +32,9 @@ BLOCKED_PATTERN = [
         r'pg_sleep\(.*\)',
         r'(query|database)_to_xml\(.*\)',
         r'cast\(.*\)',
-        r'select.*from',
         r'version\(.*\)',
         r'copy.*from',
         r'current_setting\(.*\)',
         r'inet_server_(port|addr)\(.*\)',
-        r'(create|drop|truncate).*(table|database)',
-        r'<script.*</script>'
+        r'(create|drop|truncate).*(table|database)'
 ]
-
-BLOCKED_PATTERN.extend(XSS_PATTERNS)

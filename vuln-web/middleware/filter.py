@@ -1,12 +1,15 @@
 import re
 from urllib.parse import unquote_plus
-from defination import BLOCKED_PATTERN
+from defination import SQLI_PATTERN,XSS_PATTERNS
 
 
 class FilterMiddleware:
 
 
     def __init__(self, app):
+        self.block_strategy = dict()
+        self.block_strategy['sqli'] = {'malicious_checking_pattern':r'(\(|\)|select|<|>|=|\')','BLOCKED_PATTERNS':SQLI_PATTERN}
+        self.block_strategy['xss'] = {'malicious_checking_pattern':r'(<|>|"|=)','BLOCKED_PATTERNS':XSS_PATTERNS}
         self.app = app
     
     
@@ -18,11 +21,16 @@ class FilterMiddleware:
             body = unquote_plus(body.decode('utf-8', errors='replace'))
         else:
             body :str = body.decode('unicode-escape',errors="replace")
-
-        for pattern in BLOCKED_PATTERN:
-            if re.search(pattern, body, re.IGNORECASE | re.MULTILINE):
-                return True
+        for _,v in self.block_strategy.items():
+            malicious_checking_pattern = v.get('malicious_checking_pattern')
+            if re.search(malicious_checking_pattern, body, re.IGNORECASE | re.MULTILINE):
+                blocked_patterns = v.get('BLOCKED_PATTERNS')
+                for pattern in blocked_patterns:
+                    if re.search(pattern, body, re.IGNORECASE | re.MULTILINE):
+                        return True
         return False
+                    
+        
     
     async def __call__(self, scope, receive, send):
         if scope['type'] == 'http':

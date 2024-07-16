@@ -106,3 +106,4 @@
 (<video).*onfullscreenchange.*=
 (<video).*onloadstart.*=
 (<video).*onmozfullscreenchange.*=
+(<script|<object).*src.*=
